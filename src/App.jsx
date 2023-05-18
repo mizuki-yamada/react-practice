@@ -1,45 +1,45 @@
-/* react - hooks / exhaustive - deps; off */
+import React, { useState } from "react";
+import "./styles.css";
 
-import React, { useEffect, useState } from "react";
-import ColorfulMessage from "./components/ColorfulMessage";
+export const App = () => {
+  const [incompleteTodos, setIncompleteTodos] = useState(['aaaaaaa','bbbbbb']);
+  const [completeTodos, setCompleteTodos] = useState(['uuuuuuuuuu']);
 
-const App = () => {
-  console.log("最初");
-  const [num, setNum] = useState(0);
-  const [faceShowFlag, setFaceShowFlag] = useState(false);
-
-  const onClickCountUp = () => {
-    setNum(num + 1);
-  };
-
-  const onClickSwitchShowFlag = () => {
-    setFaceShowFlag(!faceShowFlag);
-  };
-
-  //numだけに関心を寄せたい処理があるとき
-  useEffect(() => {
-    if (num > 0) {
-      if (num % 3 === 0) {
-        faceShowFlag || setFaceShowFlag(true);
-      } else {
-        faceShowFlag && setFaceShowFlag(false);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [num]);
-
-  return (
+    return (
     <>
-      <h1 style={{ color: "red" }}>こんにちは！</h1>
-      <ColorfulMessage color="red">お元気ですか</ColorfulMessage>
-      <ColorfulMessage color="pink">aaaaaaa</ColorfulMessage>
-      <button onClick={onClickCountUp}>カウントアップ</button>
-      <br />
-      <button onClick={onClickSwitchShowFlag}>on/off</button>
-      <p>{num}</p>
-      {faceShowFlag && <p>😃</p>}
+      <div className="input-area">
+        <input placeholder="TODOを入力" />
+        <button>追加</button>
+      </div>
+      <div className="incomplete-area">
+        <p className="title">未完了のTODO</p>
+          <ul>
+            {incompleteTodos.map((todo) => {
+              return (
+                <div key={todo} className="list-row">
+                {/* 仮想DOMなので、ループする場合、何番目のループなのか目印をつける必要がある */}
+                  <li>{todo}</li>
+                  <button>完了</button>
+                  <button>削除</button>
+                </div>
+              );
+            })}
+         
+        </ul>
+      </div>
+      <div className="complete-area">
+        <p className="title">完了のTODO</p>
+          <ul>
+            {completeTodos.map((todo) => {
+              return (
+                <div key={todo} className="list-row">
+                  <li>{todo}</li>
+                  <button>戻す</button>
+                </div>
+              );
+            })}
+        </ul>
+      </div>
     </>
   );
 };
-
-export default App;
