@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import "./styles.css";
+import { InputTodo } from "./components/inputTodo";
+import { IncompleteTodo } from "./components/incompleteTodo";
+import { CompleteTodo } from "./components/completeTodo";
 
 export const App = () => {
   const [todoText, setTodoText] = useState("");
@@ -57,43 +60,26 @@ export const App = () => {
 
   return (
     <>
-      <div className="input-area">
-        <input
-          placeholder="TODOを入力"
-          value={todoText}
-          onChange={onChangeTodoText}
-        />
-        <button onClick={onClickAdd}>追加</button>
-      </div>
-      <div className="incomplete-area">
-        <p className="title">未完了のTODO</p>
-        <ul>
-          {incompleteTodos.map((todo, index) => {
-            return (
-              <div key={todo} className="list-row">
-                {/* 仮想DOMなので、ループする場合、何番目のループなのか目印をつける必要がある */}
-                <li>{todo}</li>
-                <button onClick={() => onClickComplete(index)}>完了</button>
-                <button onClick={() => onClickDelete(index)}>削除</button>
-                {/* 関数に引数を渡したいときはアロー関数で当該関数を指定する必要がある */}
-              </div>
-            );
-          })}
-        </ul>
-      </div>
-      <div className="complete-area">
-        <p className="title">完了のTODO</p>
-        <ul>
-          {completeTodos.map((todo, index) => {
-            return (
-              <div key={todo} className="list-row">
-                <li>{todo}</li>
-                <button onClick={() => onClickBack(index)}>戻す</button>
-              </div>
-            );
-          })}
-        </ul>
-      </div>
+      <InputTodo
+        todoText={todoText}
+        onChange={onChangeTodoText}
+        onClick={onClickAdd}
+        disabled={incompleteTodos.length >= 5}
+        // incompleteTodosが5個以上かどうかでT/Fをpropsに渡す
+      ></InputTodo>
+
+      {incompleteTodos.length >= 5 && <p>登録できるtodoは5個までです</p>}
+
+      <IncompleteTodo
+        todo={incompleteTodos}
+        onClickDelete={onClickDelete}
+        onClickComplete={onClickComplete}
+      ></IncompleteTodo>
+
+      <CompleteTodo
+        completeTodo={completeTodos}
+        onClickBack={onClickBack}
+      ></CompleteTodo>
     </>
   );
 };
