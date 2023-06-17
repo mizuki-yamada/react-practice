@@ -1,85 +1,45 @@
-import React, { useState } from "react";
-import "./styles.css";
-import { InputTodo } from "./components/inputTodo";
-import { IncompleteTodo } from "./components/incompleteTodo";
-import { CompleteTodo } from "./components/completeTodo";
+import React, { useEffect, useState } from "react";
+import CreateText from "./components/createText";
 
-export const App = () => {
-  const [todoText, setTodoText] = useState("");
-  const [incompleteTodos, setIncompleteTodos] = useState([]);
-  const [completeTodos, setCompleteTodos] = useState([]);
+const App = () => {
+  const [num, setNum] = useState(0);
+  const [isdisplayed, setIsDisplayed] = useState(true);
 
-  const onChangeTodoText = (event) => setTodoText(event.target.value);
-
-  const onClickAdd = () => {
-    //新しいTODOを追加するときの処理
-    if (todoText === "") {
-      //TODOが空文字なら何も返さず、TODOに追加しない
-      return;
-    }
-    //すでにある未完了TODO（初期値は空の配列）に入力されたTODOを追加
-    const newTodos = [...incompleteTodos, todoText];
-    //最新のTODOにセット
-    setIncompleteTodos(newTodos);
-    setTodoText("");
+  const clickCountUp = () => {
+    setNum(num + 1);
   };
 
-  const onClickDelete = (index) => {
-    //TODOを削除したいときの処理
-    const newTodos = [...incompleteTodos];
-    //index番目のTODOを削除
-    newTodos.splice(index, 1);
-    //最新のTODOにセット
-    setIncompleteTodos(newTodos);
+  const faseDisplayFlag = () => {
+    setIsDisplayed(!isdisplayed);
   };
 
-  const onClickComplete = (index) => {
-    //タスクを完了した時の処理
-    const newIncompleteTodos = [...incompleteTodos];
-    //index番目のTODOを削除
-    newIncompleteTodos.splice(index, 1);
+  useEffect(() => {
+    console.log("aaaaaaaa");
+      if (num % 3 === 0) {
+        isdisplayed || setIsDisplayed(true);
+      } else {
+        isdisplayed && setIsDisplayed(false);
+      }
+  }, [num]);
 
-    //完了したTODO（初期値は空の配列）を、配列の末尾にセット
-    const newCompleteTodos = [...completeTodos, incompleteTodos[index]];
-    //最新のTODOにセット
-    setIncompleteTodos(newIncompleteTodos);
-    //最新の完了タスクを更新
-    setCompleteTodos(newCompleteTodos);
-  };
-
-  const onClickBack = (index) => {
-    //完了したタスクを未完了に戻したい時の処理
-    const newCompleteTodos = [...completeTodos];
-    //index番目のタスクを完了タスク配列から削除
-    newCompleteTodos.splice(index, 1);
-
-    const newIncompleteTodos = [...incompleteTodos, completeTodos[index]];
-    setCompleteTodos(newCompleteTodos);
-    setIncompleteTodos(newIncompleteTodos);
+  const contentStyle = {
+    color: "blue",
+    fontSize: "64px",
   };
 
   return (
     <>
-      <InputTodo
-        todoText={todoText}
-        onChange={onChangeTodoText}
-        onClick={onClickAdd}
-        disabled={incompleteTodos.length >= 5}
-        // incompleteTodosが5個以上かどうかでT/Fをpropsに渡す
-      ></InputTodo>
+      <h1 style={contentStyle}>こんにちは</h1>
+      <CreateText color="blue">aaaaaaaaaaaa</CreateText>
+      <CreateText color="blue">aaaaaaaaaaaa</CreateText>
 
-      {incompleteTodos.length >= 5 && <p>登録できるtodoは5個までです</p>}
-
-      <IncompleteTodo
-        todo={incompleteTodos}
-        onClickDelete={onClickDelete}
-        onClickComplete={onClickComplete}
-      ></IncompleteTodo>
-
-      <CompleteTodo
-        completeTodo={completeTodos}
-        onClickBack={onClickBack}
-      ></CompleteTodo>
+      <button onClick={clickCountUp}>カウントアップ</button>
+      <br></br>
+      <button onClick={faseDisplayFlag}>on/off</button>
+      <p>{num}</p>
+      {isdisplayed && <p>^ ^</p>}
     </>
   );
 };
+
+export default App;
